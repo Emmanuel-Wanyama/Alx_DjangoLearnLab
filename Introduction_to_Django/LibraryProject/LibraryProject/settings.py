@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bookshelf',  # Custom app for managing books
 ]
 
 MIDDLEWARE = [
@@ -74,11 +75,21 @@ WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        # You can put placeholder values here, or leave them out if settings_local.py will fully define them.
+        # For example, you might define a default non-sensitive setup, and then override.
+        # NAME, USER, PASSWORD, HOST, PORT will be overridden by settings_local.py
     }
 }
 
+# Load local settings (which will override sensitive parts of DATABASES)
+try:
+    from .settings_local import * # type: ignore
+except ImportError:
+    # This block is executed if settings_local.py is not found.
+    # You might want to print a warning or handle default values for production.
+    print("Warning: settings_local.py not found. Ensure sensitive settings are configured.")
+    pass
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
