@@ -33,18 +33,18 @@ def run_queries():
             print(f"Created Book: {book2.title}")
 
         # Query books by author's name
-        target_author_name = "Jane Austen"
+        author_name = "Jane Austen" # Changed variable name
         try:
-            author = Author.objects.get(name=target_author_name)
-            books_by_author = author.books.all() # Using the related_name 'books'
-            print(f"Books by {target_author_name}:")
+            author = Author.objects.get(name=author_name) # Used new variable name
+            books_by_author = Book.objects.filter(author=author) # Changed to explicit filter on Book model
+            print(f"Books by {author_name}:")
             if books_by_author.exists():
                 for book in books_by_author:
                     print(f"  - {book.title}")
             else:
-                print(f"  No books found for {target_author_name}.")
+                print(f"  No books found for {author_name}.")
         except Author.DoesNotExist:
-            print(f"Author '{target_author_name}' not found.")
+            print(f"Author '{author_name}' not found.")
 
     except Exception as e:
         print(f"Error during author/book query: {e}")
@@ -63,9 +63,15 @@ def run_queries():
         print(f"Added books to {library1.name}")
 
         # Query books in a library by library's name
+<<<<<<< HEAD
         library_name = "Central City Library" # Changed variable name
         try:
             library = Library.objects.get(name=library_name) # Used new variable name
+=======
+        library_name = "Central City Library"
+        try:
+            library = Library.objects.get(name=library_name)
+>>>>>>> 1562a507503ad6553103df93861bce578744c33a
             books_in_library = library.books.all() # Using the ManyToManyField 'books'
             print(f"Books in {library_name}:")
             if books_in_library.exists():
@@ -80,8 +86,8 @@ def run_queries():
         print(f"Error during library/books query: {e}")
 
 
-    # --- 3. Retrieve the librarian for a library ---
-    print("\n3. Retrieving the librarian for a library:")
+    # --- 3. Retrieve the librarian for a library (via Library model) ---
+    print("\n3. Retrieving the librarian for a library (via Library model):")
     try:
         # Create some sample data if it doesn't exist
         # Ensure library1 exists from previous step
@@ -90,9 +96,15 @@ def run_queries():
             print(f"Created Librarian: {librarian1.name} for {library1.name}")
 
         # Query librarian by library's name
+<<<<<<< HEAD
         library_name = "Central City Library" # Changed variable name
         try:
             library = Library.objects.get(name=library_name) # Used new variable name
+=======
+        library_name = "Central City Library"
+        try:
+            library = Library.objects.get(name=library_name)
+>>>>>>> 1562a507503ad6553103df93861bce578744c33a
             # Access the librarian through the related_name 'librarian'
             librarian = library.librarian
             print(f"Librarian for {library_name}: {librarian.name}")
@@ -103,6 +115,26 @@ def run_queries():
 
     except Exception as e:
         print(f"Error during librarian query: {e}")
+
+    # --- 4. Retrieve the librarian for a specific library (via Librarian model) ---
+    print("\n4. Retrieving the librarian by filtering on the library directly:")
+    try:
+        # We assume library1 and librarian1 exist from previous steps
+        library_name_for_query = "Central City Library"
+        try:
+            # First, get the Library instance
+            library_instance = Library.objects.get(name=library_name_for_query)
+            # Then, use this instance to query the Librarian
+            librarian_direct = Librarian.objects.get(library=library_instance)
+            print(f"Librarian for '{library_name_for_query}' (direct query): {librarian_direct.name}")
+        except Library.DoesNotExist:
+            print(f"Library '{library_name_for_query}' not found for direct librarian query.")
+        except Librarian.DoesNotExist:
+            print(f"No librarian found directly for library '{library_name_for_query}'.")
+
+    except Exception as e:
+        print(f"Error during direct librarian query: {e}")
+
 
     print("\n--- Query Samples Finished ---")
 
