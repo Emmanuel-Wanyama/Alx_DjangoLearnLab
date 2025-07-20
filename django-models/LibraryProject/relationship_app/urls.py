@@ -15,13 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import list_book
+from .views import list_books
 from .views import LibraryDetailView # Updated: Directly import views
 
 app_name = 'relationship_app' # Define app_name for namespacing
 
 urlpatterns = [
-    path('books/', book_list, name='book_list'), # Used direct import
+    path('books/', list_books, name='list_books'), # Used direct import
     # New URL pattern for LibraryDetailView, expecting a primary key (pk)
     path('library/<int:pk>/', LibraryDetailView.as_as_view(), name='library_detail'),
 ]
