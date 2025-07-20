@@ -15,9 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include # Ensure 'include' is imported
+from django.urls import path, include
+from django.views.generic.base import RedirectView # Import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Redirect the root URL to the book list page
+    path('', RedirectView.as_view(url='/relationship_app/books/', permanent=False)),
     path('relationship_app/', include('relationship_app.urls')),
 ]
