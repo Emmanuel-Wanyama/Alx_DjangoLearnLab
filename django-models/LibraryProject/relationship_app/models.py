@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User # Import Django's built-in User model
+from django.db.models.signals import post_save # Import post_save signal
+from django.dispatch import receiver # Import receiver decorator
 
 # Author Model:
 # name: CharField.
@@ -57,6 +60,29 @@ class Librarian(models.Model):
     def __str__(self):
         return f"Librarian: {self.name} ({self.library.name})"
 
+# UserProfile Model: Extends Django's User model with a role
+class UserProfile(models.Model):
+    """
+    Extends Django's built-in User model to include a role.
+    """
+    ROLE_CHOICES = (
+        ('Admin', 'Admin'),
+        ('Librarian', 'Librarian'),
+        ('Member', 'Member'),
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
 
+    def __str__(self):
+        return f"{self.user.username}'s Profile ({self.role})"
 
-# Create your models here.
+# Signal to automatically create a UserProfile when a new User is created
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
+

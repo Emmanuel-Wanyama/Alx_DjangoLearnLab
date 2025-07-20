@@ -1,11 +1,10 @@
-# relationship_app/views.py
-
-from django.shortcuts import render, redirect # Import redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.detail import DetailView
-from .models import Book, Library
-from django.contrib.auth.forms import UserCreationForm # Import UserCreationForm
-from django.contrib.auth import login # Import login to automatically log in the user after registration
+from .models import Book, Library, UserProfile # Import UserProfile
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import user_passes_test # Import user_passes_test
 
 
 def list_books(request):
@@ -15,7 +14,6 @@ def list_books(request):
     """
     books = Book.objects.all().select_related('author')
     
-    # Corrected template path: removed the redundant 'templates/'
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
 class LibraryDetailView(DetailView):
@@ -25,7 +23,7 @@ class LibraryDetailView(DetailView):
     It uses Django's DetailView to retrieve a single Library object.
     """
     model = Library
-    template_name = 'relationship_app/library_detail.html' # This template is still needed for LibraryDetailView
+    template_name = 'relationship_app/library_detail.html'
 
     def get_context_data(self, **kwargs):
         """
@@ -46,9 +44,42 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) # Log the user in immediately after registration
-            return redirect('login_success') # Redirect to a success URL after login
+            # UserProfile is created automatically by signal, no need to manually create here
+            login(request, user)
+            return redirect('relationship_app:login_success')
     else:
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
+
+# Helper functions for role checks
+def is_admin(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+# Role-based views
+@user_passes_test(is_admin, login_url='relationship_app:login')
+def admin_view(request):
+    """
+    View accessible only to users with the 'Admin' role.
+    """
+    return render(request, 'relationship_app/admin_view.html', {'message': 'Welcome, Admin!'})
+
+@user_passes_test(is_librarian, login_url='relationship_app:login')
+def librarian_view(request):
+    """
+    View accessible only to users with the 'Librarian' role.
+    """
+    return render(request, 'relationship_app/librarian_view.html', {'message': 'Welcome, Librarian!'})
+
+@user_passes_test(is_member, login_url='relationship_app:login')
+def member_view(request):
+    """
+    View accessible only to users with the 'Member' role.
+    """
+    return render(request, 'relationship_app/member_view.html', {'message': 'Welcome, Member!'})
 

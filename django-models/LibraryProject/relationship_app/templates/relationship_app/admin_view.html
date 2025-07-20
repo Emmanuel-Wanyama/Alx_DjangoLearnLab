@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f8ff; color: #333; text-align: center; }
+        h1 { color: #8a2be2; margin-top: 50px; }
+        p { font-size: 1.2em; }
+        a { color: #007bff; text-decoration: none; margin: 0 10px; }
+        a:hover { text-decoration: underline; }
+        .nav-links { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <p>{{ message }}</p>
+    <div class="nav-links">
+        <a href="{% url 'relationship_app:list_books' %}">View All Books</a> |
+        <a href="{% url 'relationship_app:logout' %}">Logout</a>
+    </div>
+    <p>As an Admin, you have full control over the system.</p>
+</body>
+</html>
