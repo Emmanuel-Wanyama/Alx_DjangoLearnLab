@@ -23,5 +23,5 @@ app_name = 'relationship_app' # Define app_name for namespacing
 urlpatterns = [
     path('books/', list_books, name='list_books'), # Used direct import
     # New URL pattern for LibraryDetailView, expecting a primary key (pk)
-    path('library/<int:pk>/', LibraryDetailView.as_as_view(), name='library_detail'),
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
 ]
