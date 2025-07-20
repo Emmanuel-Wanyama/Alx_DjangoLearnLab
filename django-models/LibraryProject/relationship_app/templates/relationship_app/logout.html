@@ -1,0 +1,19 @@
+<!-- relationship_app/templates/relationship_app/logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; text-align: center; }
+        h1 { color: #0056b3; margin-top: 50px; }
+        a { color: #007bff; text-decoration: none; display: inline-block; margin-top: 20px; padding: 10px 15px; border: 1px solid #007bff; border-radius: 5px; }
+        a:hover { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <h1>You have been logged out</h1>
+    <a href="{% url 'relationship_app:login' %}">Login again</a>
+</body>
+</html>
