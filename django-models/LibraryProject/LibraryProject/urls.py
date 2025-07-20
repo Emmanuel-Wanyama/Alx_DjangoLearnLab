@@ -14,14 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
-from . import views
-from .views import LibraryDetailView # Import the new class-based view
-
-app_name = 'relationship_app' # Define app_name for namespacing
+from django.contrib import admin
+from django.urls import path, include # Ensure 'include' is imported
 
 urlpatterns = [
-    path('books/', views.book_list, name='book_list'),
-    # New URL pattern for LibraryDetailView, expecting a primary key (pk)
-    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+    path('admin/', admin.site.urls),
+    path('relationship_app/', include('relationship_app.urls')),
 ]

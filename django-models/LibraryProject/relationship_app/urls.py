@@ -15,14 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import list_books
-from . import views
-from .views import LibraryDetailView # Import the new class-based view
+from . import views # This imports your views.py module
+from .views import LibraryDetailView
 
-app_name = 'relationship_app' # Define app_name for namespacing
+app_name = 'relationship_app'
 
 urlpatterns = [
-    path('books/', views.book_list, name='book_list'),
-    # New URL pattern for LibraryDetailView, expecting a primary key (pk)
+    path('books/', views.book_list, name='book_list'), # Ensure 'views.book_list' is correct
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
 ]
