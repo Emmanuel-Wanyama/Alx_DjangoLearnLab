@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 
-def book_list(request):
+def list_book(request):
         """
         A function-based view that retrieves all books from the database
         and renders them as a simple plain text list of titles and authors.
