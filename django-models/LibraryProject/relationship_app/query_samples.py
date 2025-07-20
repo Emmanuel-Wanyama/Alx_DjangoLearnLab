@@ -1,3 +1,5 @@
+# relationship_app/query_samples.py
+
 import os
 import django
 
@@ -61,18 +63,18 @@ def run_queries():
         print(f"Added books to {library1.name}")
 
         # Query books in a library by library's name
-        target_library_name = "Central City Library"
+        library_name = "Central City Library" # Changed variable name
         try:
-            library = Library.objects.get(name=target_library_name)
+            library = Library.objects.get(name=library_name) # Used new variable name
             books_in_library = library.books.all() # Using the ManyToManyField 'books'
-            print(f"Books in {target_library_name}:")
+            print(f"Books in {library_name}:")
             if books_in_library.exists():
                 for book in books_in_library:
                     print(f"  - {book.title} by {book.author.name}")
             else:
-                print(f"  No books found in {target_library_name}.")
+                print(f"  No books found in {library_name}.")
         except Library.DoesNotExist:
-            print(f"Library '{target_library_name}' not found.")
+            print(f"Library '{library_name}' not found.")
 
     except Exception as e:
         print(f"Error during library/books query: {e}")
@@ -88,16 +90,16 @@ def run_queries():
             print(f"Created Librarian: {librarian1.name} for {library1.name}")
 
         # Query librarian by library's name
-        target_library_name = "Central City Library"
+        library_name = "Central City Library" # Changed variable name
         try:
-            library = Library.objects.get(name=target_library_name)
+            library = Library.objects.get(name=library_name) # Used new variable name
             # Access the librarian through the related_name 'librarian'
             librarian = library.librarian
-            print(f"Librarian for {target_library_name}: {librarian.name}")
+            print(f"Librarian for {library_name}: {librarian.name}")
         except Library.DoesNotExist:
-            print(f"Library '{target_library_name}' not found.")
+            print(f"Library '{library_name}' not found.")
         except Librarian.DoesNotExist:
-            print(f"No librarian found for '{target_library_name}'.")
+            print(f"No librarian found for '{library_name}'.")
 
     except Exception as e:
         print(f"Error during librarian query: {e}")
