@@ -33,18 +33,18 @@ def run_queries():
             print(f"Created Book: {book2.title}")
 
         # Query books by author's name
-        target_author_name = "Jane Austen"
+        author_name = "Jane Austen" # Changed variable name
         try:
-            author = Author.objects.get(name=target_author_name)
-            books_by_author = author.books.all() # Using the related_name 'books'
-            print(f"Books by {target_author_name}:")
+            author = Author.objects.get(name=author_name) # Used new variable name
+            books_by_author = Book.objects.filter(author=author) # Changed to explicit filter on Book model
+            print(f"Books by {author_name}:")
             if books_by_author.exists():
                 for book in books_by_author:
                     print(f"  - {book.title}")
             else:
-                print(f"  No books found for {target_author_name}.")
+                print(f"  No books found for {author_name}.")
         except Author.DoesNotExist:
-            print(f"Author '{target_author_name}' not found.")
+            print(f"Author '{author_name}' not found.")
 
     except Exception as e:
         print(f"Error during author/book query: {e}")
@@ -63,9 +63,9 @@ def run_queries():
         print(f"Added books to {library1.name}")
 
         # Query books in a library by library's name
-        library_name = "Central City Library" # Changed variable name
+        library_name = "Central City Library"
         try:
-            library = Library.objects.get(name=library_name) # Used new variable name
+            library = Library.objects.get(name=library_name)
             books_in_library = library.books.all() # Using the ManyToManyField 'books'
             print(f"Books in {library_name}:")
             if books_in_library.exists():
@@ -90,9 +90,9 @@ def run_queries():
             print(f"Created Librarian: {librarian1.name} for {library1.name}")
 
         # Query librarian by library's name
-        library_name = "Central City Library" # Changed variable name
+        library_name = "Central City Library"
         try:
-            library = Library.objects.get(name=library_name) # Used new variable name
+            library = Library.objects.get(name=library_name)
             # Access the librarian through the related_name 'librarian'
             librarian = library.librarian
             print(f"Librarian for {library_name}: {librarian.name}")
