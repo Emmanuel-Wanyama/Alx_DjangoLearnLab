@@ -80,8 +80,8 @@ def run_queries():
         print(f"Error during library/books query: {e}")
 
 
-    # --- 3. Retrieve the librarian for a library ---
-    print("\n3. Retrieving the librarian for a library:")
+    # --- 3. Retrieve the librarian for a library (via Library model) ---
+    print("\n3. Retrieving the librarian for a library (via Library model):")
     try:
         # Create some sample data if it doesn't exist
         # Ensure library1 exists from previous step
@@ -103,6 +103,26 @@ def run_queries():
 
     except Exception as e:
         print(f"Error during librarian query: {e}")
+
+    # --- 4. Retrieve the librarian for a specific library (via Librarian model) ---
+    print("\n4. Retrieving the librarian by filtering on the library directly:")
+    try:
+        # We assume library1 and librarian1 exist from previous steps
+        library_name_for_query = "Central City Library"
+        try:
+            # First, get the Library instance
+            library_instance = Library.objects.get(name=library_name_for_query)
+            # Then, use this instance to query the Librarian
+            librarian_direct = Librarian.objects.get(library=library_instance)
+            print(f"Librarian for '{library_name_for_query}' (direct query): {librarian_direct.name}")
+        except Library.DoesNotExist:
+            print(f"Library '{library_name_for_query}' not found for direct librarian query.")
+        except Librarian.DoesNotExist:
+            print(f"No librarian found directly for library '{library_name_for_query}'.")
+
+    except Exception as e:
+        print(f"Error during direct librarian query: {e}")
+
 
     print("\n--- Query Samples Finished ---")
 
