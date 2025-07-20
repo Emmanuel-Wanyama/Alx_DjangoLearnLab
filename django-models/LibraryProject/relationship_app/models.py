@@ -26,6 +26,13 @@ class Book(models.Model):
     # ForeignKey: A Book belongs to one Author
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
 
+    class Meta: # Added Meta class for custom permissions
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
+        ]
+
     def __str__(self):
         return self.title
 
@@ -85,4 +92,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
-
