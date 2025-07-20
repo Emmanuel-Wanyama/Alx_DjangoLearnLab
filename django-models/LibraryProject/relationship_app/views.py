@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test, permission_required # Import permission_required
 from django import forms # Import forms module for simple form
+from django.contrib.auth.decorators import permission_required
 
 
 # Simple form for adding/editing books
