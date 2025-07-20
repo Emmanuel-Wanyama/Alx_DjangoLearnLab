@@ -18,7 +18,7 @@ def book_list(request):
         else:
             book_titles_authors += "No books found in the database.\n"
             
-        return HttpResponse(book_titles_authors, content_type="text/plain")
+        return render(request, 'relationship_app/list_books.html', {'books': books})
 
 class LibraryDetailView(DetailView):
         """
