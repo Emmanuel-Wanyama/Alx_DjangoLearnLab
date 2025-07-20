@@ -29,7 +29,7 @@ class LibraryDetailView(DetailView):
     It uses Django's DetailView to retrieve a single Library object.
     """
     model = Library
-    template_name = 'relationship_app/library_detail.html' # Path to your template
+    template_name = 'relationship_app/library_detail.html' # This view should render a simple text list of book titles and their authors.
 
     def get_context_data(self, **kwargs):
         """
