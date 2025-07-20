@@ -3,7 +3,8 @@
 from django.shortcuts import render # Keep render for other potential uses, though not for book_list now
 from django.http import HttpResponse # Ensure HttpResponse is imported
 from django.views.generic import DetailView
-from .models import Book, Library # Import Library model
+from .models import Book 
+from .models import Library # Import Library model
 
 def book_list(request):
     """
@@ -30,6 +31,7 @@ class LibraryDetailView(DetailView):
     """
     model = Library
     template_name = 'relationship_app/list_books.html' # Path to your template
+    template_name = 'relationship_app/library_detail.html'
 
     def get_context_data(self, **kwargs):
         """
