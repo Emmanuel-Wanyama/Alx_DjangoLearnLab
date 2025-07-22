@@ -1,10 +1,8 @@
-# relationship_app/models.py
-
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager # Import AbstractUser and BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings # Import settings to reference AUTH_USER_MODEL
+from django.conf import settings
 
 
 # Custom User Manager
@@ -44,10 +42,10 @@ class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
-    objects = CustomUserManager() # Assign the custom manager
+    objects = CustomUserManager()
 
-    USERNAME_FIELD = 'username' # Using username as the unique identifier for login
-    # REQUIRED_FIELDS = ['email', 'date_of_birth'] # Example: if you wanted email/dob to be required
+    USERNAME_FIELD = 'username'
+    # REQUIRED_FIELDS = ['email', 'date_of_birth']
 
     def __str__(self):
         return self.username
@@ -76,8 +74,10 @@ class Book(models.Model):
     # ForeignKey: A Book belongs to one Author
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
 
-    class Meta: # Added Meta class for custom permissions
+    class Meta:
+        # Define custom permissions for the Book model
         permissions = [
+            ("can_view_book", "Can view book"), # New permission
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book"),
@@ -146,4 +146,3 @@ def save_user_profile(sender, instance, **kwargs):
     # Ensure a userprofile exists before trying to save it
     if hasattr(instance, 'userprofile'):
         instance.userprofile.save()
-
