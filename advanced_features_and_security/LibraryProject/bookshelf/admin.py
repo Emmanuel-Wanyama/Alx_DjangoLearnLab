@@ -1,23 +1,40 @@
+# relationship_app/admin.py
+
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin # Import default UserAdmin
+from .models import CustomUser, UserProfile, Author, Book, Library, Librarian # Import your models
 
-@admin.register(Book)
-class BookAdmin(admin.ModelAdmin):
-    # Displays these fields in the list view of the admin interface
-    list_display = ('title', 'author', 'publication_year', 'id')
+# Custom Admin for CustomUser
+class CustomUserAdmin(DefaultUserAdmin):
+    """
+    Admin configuration for the CustomUser model.
+    Adds date_of_birth and profile_photo to the user change form.
+    """
+    fieldsets = DefaultUserAdmin.fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    add_fieldsets = DefaultUserAdmin.add_fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
 
-    # Adds filters to the right sidebar in the admin list view
-    list_filter = ('publication_year', 'author')
+    # You might want to add 'date_of_birth' and 'profile_photo' to list_display
+    list_display = DefaultUserAdmin.list_display + ('date_of_birth', 'profile_photo')
 
-    # Adds a search bar to the top of the admin list view
-    # Searches across the specified fields
-    search_fields = ('title', 'author')
 
-    # Makes the fields clickable to view the detail page
-    list_display_links = ('title',)
+# Unregister the default User model if it was registered
+try:
+    admin.site.unregister(admin.site.get_model('auth', 'User'))
+except admin.sites.NotRegistered:
+    pass # Already unregistered or not registered
 
-    # Fields that can be edited directly from the list view
-    list_editable = ('publication_year',)
+# Register your CustomUser model with the custom admin class
+admin.site.register(CustomUser, CustomUserAdmin)
 
-    # Order the list view by title by default
-    ordering = ('title',)
+# Register other models as usual
+admin.site.register(UserProfile)
+admin.site.register(Author)
+admin.site.register(Book)
+admin.site.register(Library)
+admin.site.register(Librarian)
+admin.site.register(CustomUser, CustomUserAdmin)
+
