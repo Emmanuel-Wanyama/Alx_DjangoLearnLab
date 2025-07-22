@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; text-align: center; }
+        h1 { color: #dc3545; margin-top: 50px; }
+        p { font-size: 1.1em; margin-bottom: 20px; }
+        form { display: inline-block; }
+        button { background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 0 10px; }
+        button:hover { background-color: #c82333; }
+        .cancel-link { display: inline-block; margin: 0 10px; }
+        .cancel-link a { color: #007bff; text-decoration: none; padding: 10px 20px; border: 1px solid #007bff; border-radius: 5px; }
+        .cancel-link a:hover { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete the book: "<strong>{{ book.title }}</strong>" by {{ book.author.name }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+    </form>
+    <div class="cancel-link">
+        <a href="{% url 'relationship_app:list_books' %}">Cancel</a>
+    </div>
+</body>
+</html>
