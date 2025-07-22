@@ -1,0 +1,10 @@
+Books Available:
+{% if books %}
+{% for book in books %}
+{{ book.title }} by {{ book.author.name }}
+{% endfor %}
+{% else %}
+No books found in the database.
+
+{% endif %}
+View a Library (e.g., ID 1)
