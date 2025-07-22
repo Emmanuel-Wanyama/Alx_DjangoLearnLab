@@ -27,15 +27,15 @@ class BookForm(forms.ModelForm):
 
 
 @permission_required('relationship_app.can_view_book', login_url='relationship_app:login', raise_exception=True)
-def list_books(request):
+def book_list(request):
     """
     A function-based view that retrieves all books from the database
-     and renders them using the 'relationship_app/list_books.html' template.
+     and renders them using the 'relationship_app/book_list.html' template.
     Requires 'can_view_book' permission.
     """
     books = Book.objects.all().select_related('author')
     
-    return render(request, 'relationship_app/list_books.html', {'books': books})
+    return render(request, 'relationship_app/book_list.html', {'books': books})
 
 class LibraryDetailView(DetailView):
     """
@@ -114,7 +114,7 @@ def add_book(request):
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('relationship_app:list_books')
+            return redirect('relationship_app:book_list')
     else:
         form = BookForm()
     return render(request, 'relationship_app/book_form.html', {'form': form, 'action': 'Add'})
@@ -129,7 +129,7 @@ def edit_book(request, pk):
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('relationship_app:list_books')
+            return redirect('relationship_app:book_list')
     else:
         form = BookForm(instance=book)
     return render(request, 'relationship_app/book_form.html', {'form': form, 'action': 'Edit'})
@@ -142,6 +142,6 @@ def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         book.delete()
-        return redirect('relationship_app:list_books')
+        return redirect('relationship_app:book_list')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
 
