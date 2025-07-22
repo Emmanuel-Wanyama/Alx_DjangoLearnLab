@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5)6=5ug($4wsrgzgnb_82h(1x7gpu(9kzm543hjw81(sl$g^mc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'relationship_app',
     'bookshelf',
+    'csp',  # Content Security Policy app for enhanced security
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # Middleware for Content Security Policy
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -136,3 +138,33 @@ LOGIN_REDIRECT_URL = '/relationship_app/login_success/' # URL to redirect to aft
 LOGOUT_REDIRECT_URL = '/relationship_app/logged_out/' # URL to redirect to after successful logout
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+SECURE_BROWSER_XSS_FILTER = True # Enables XSS filter in older browsers (modern browsers have built-in)
+X_FRAME_OPTIONS = 'DENY' # Prevents clickjacking by disallowing embedding in iframes
+SECURE_CONTENT_TYPE_NOSNIFF = True # Prevents browsers from MIME-sniffing content type
+
+# 3. Enforce secure cookies over HTTPS
+# These should be True in production when serving over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Optional: If you are serving over HTTPS and want to enforce HSTS (HTTP Strict Transport Security)
+# SECURE_HSTS_SECONDS = 31536000 # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True # Only if you want to apply for HSTS preload list
+
+# Optional: Redirect all HTTP requests to HTTPS (requires SECURE_SSL_REDIRECT = True)
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # If behind a proxy/load balancer
+
+# Content Security Policy (CSP) settings
+CSP_DEFAULT_SRC = ("'self'",) # Allow content from same origin
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'",) # Allow inline scripts (often needed for Django forms/admin)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'",) # Allow inline styles
+CSP_IMG_SRC = ("'self'", "data:",) # Allow images from self and data URIs (e.g., for base64 images)
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_ANCESTORS = ("'self'",) # Controls embedding of your site in iframes
+# Add other directives as needed, e.g., for external fonts, analytics, CDN scripts etc.
+# CSP_REPORT_URI = '/csp-report/' # Optional: URL to send violation reports
+# CSP_REPORT_ONLY = DEBUG # Set to True in development to only report violations, not block

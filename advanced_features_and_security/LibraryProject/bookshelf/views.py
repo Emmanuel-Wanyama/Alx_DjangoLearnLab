@@ -27,15 +27,18 @@ class BookForm(forms.ModelForm):
 
 
 @permission_required('relationship_app.can_view_book', login_url='relationship_app:login', raise_exception=True)
-def book_list(request):
+def list_books(request):
     """
     A function-based view that retrieves all books from the database
-     and renders them using the 'relationship_app/book_list.html' template.
+     and renders them using the 'relationship_app/list_books.html' template.
     Requires 'can_view_book' permission.
+
+    Security Note: Using Django's ORM (Book.objects.all()) automatically
+    parameterizes database queries, preventing SQL injection.
     """
     books = Book.objects.all().select_related('author')
     
-    return render(request, 'relationship_app/book_list.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
 class LibraryDetailView(DetailView):
     """
@@ -60,6 +63,9 @@ def register(request):
     If the request method is POST, it attempts to create a new user.
     If successful, it logs the user in and redirects to the login redirect URL.
     Otherwise, it displays the registration form.
+
+    Security Note: UserCreationForm handles validation and sanitization of
+    user registration data, protecting against common input-related vulnerabilities.
     """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -109,12 +115,15 @@ def member_view(request):
 def add_book(request):
     """
     Allows users with 'can_add_book' permission to add new books.
+
+    Security Note: BookForm handles validation and sanitization of
+    form data, preventing malicious input.
     """
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('relationship_app:book_list')
+            return redirect('relationship_app:list_books')
     else:
         form = BookForm()
     return render(request, 'relationship_app/book_form.html', {'form': form, 'action': 'Add'})
@@ -123,13 +132,17 @@ def add_book(request):
 def edit_book(request, pk):
     """
     Allows users with 'can_change_book' permission to edit existing books.
+
+    Security Note: get_object_or_404 ensures the object exists, preventing
+    direct object access vulnerabilities. BookForm handles validation and
+    sanitization of form data.
     """
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('relationship_app:book_list')
+            return redirect('relationship_app:list_books')
     else:
         form = BookForm(instance=book)
     return render(request, 'relationship_app/book_form.html', {'form': form, 'action': 'Edit'})
@@ -138,10 +151,13 @@ def edit_book(request, pk):
 def delete_book(request, pk):
     """
     Allows users with 'can_delete_book' permission to delete books.
+
+    Security Note: get_object_or_404 ensures the object exists.
+    Deletion is handled by Django's ORM.
     """
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         book.delete()
-        return redirect('relationship_app:book_list')
+        return redirect('relationship_app:list_books')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
 
