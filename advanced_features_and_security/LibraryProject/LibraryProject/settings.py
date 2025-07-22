@@ -168,3 +168,74 @@ CSP_FRAME_ANCESTORS = ("'self'",) # Controls embedding of your site in iframes
 # Add other directives as needed, e.g., for external fonts, analytics, CDN scripts etc.
 # CSP_REPORT_URI = '/csp-report/' # Optional: URL to send violation reports
 # CSP_REPORT_ONLY = DEBUG # Set to True in development to only report violations, not block
+
+ Step 1: Configure Django for HTTPS Support
+# SECURE_SSL_REDIRECT: Set to True to redirect all non-HTTPS requests to HTTPS.
+# This should be True in production when your web server is configured for HTTPS.
+SECURE_SSL_REDIRECT = True
+
+# SECURE_HSTS_SECONDS: HTTP Strict Transport Security (HSTS)
+# Instructs browsers to only access the site via HTTPS for the specified time (in seconds).
+# 31536000 seconds = 1 year. Only enable in production after full HTTPS setup.
+SECURE_HSTS_SECONDS = 31536000
+
+# SECURE_HSTS_INCLUDE_SUBDOMAINS: Includes all subdomains in the HSTS policy.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# SECURE_HSTS_PRELOAD: Allows your domain to be preloaded into browsers' HSTS lists.
+# Only set to True if you intend to submit your domain to the HSTS preload list.
+SECURE_HSTS_PRELOAD = True
+
+# SECURE_PROXY_SSL_HEADER: Required if your Django app is behind a proxy (e.g., Nginx, Apache)
+# that handles SSL termination. This header tells Django that the request was originally HTTPS.
+# The tuple format is (HEADER_NAME, HEADER_VALUE).
+# Example: ('HTTP_X_FORWARDED_PROTO', 'https')
+# You will need to uncomment and configure this if you are using a reverse proxy.
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+# Step 2: Enforce Secure Cookies
+# SESSION_COOKIE_SECURE: Ensures session cookies are only transmitted over HTTPS.
+# Set to True in production.
+SESSION_COOKIE_SECURE = True
+
+# CSRF_COOKIE_SECURE: Ensures CSRF cookies are only transmitted over HTTPS.
+# Set to True in production.
+CSRF_COOKIE_SECURE = True
+
+
+# Step 3: Implement Secure Headers
+# X_FRAME_OPTIONS: Prevents clickjacking by controlling if your site can be embedded in iframes.
+# 'DENY' completely prevents embedding.
+X_FRAME_OPTIONS = 'DENY'
+
+# SECURE_CONTENT_TYPE_NOSNIFF: Prevents browsers from MIME-sniffing a response away
+# from the declared Content-Type. Helps mitigate XSS attacks.
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# SECURE_BROWSER_XSS_FILTER: Enables the browser's built-in XSS filter.
+# While modern browsers have strong XSS protections, this adds an extra layer for older ones.
+SECURE_BROWSER_XSS_FILTER = True
+
+# DEBUG setting: Crucial for security. Set to False in production.
+# When DEBUG is False, you MUST set ALLOWED_HOSTS.
+DEBUG = False
+
+# ALLOWED_HOSTS: A list of strings representing the host/domain names that this Django site can serve.
+# When DEBUG is False, you must provide your domain names here.
+# Example: ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] # Replace with your actual production domains
+
+
+# --- Content Security Policy (CSP) Configuration ---
+# Requires 'django-csp' package (pip install django-csp) and adding 'csp' to INSTALLED_APPS
+# and 'csp.middleware.CSPMiddleware' to MIDDLEWARE.
+# CSP_DEFAULT_SRC = ("'self'",)
+# CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'",) # 'unsafe-inline' is often needed for Django admin/forms
+# CSP_STYLE_SRC = ("'self'", "'unsafe-inline'",) # 'unsafe-inline' is often needed for Django admin/forms
+# CSP_IMG_SRC = ("'self'", "data:",)
+# CSP_FONT_SRC = ("'self'",)
+# CSP_CONNECT_SRC = ("'self'",)
+# CSP_FRAME_ANCESTORS = ("'self'",)
+# CSP_REPORT_ONLY = DEBUG # Set to True in development to only report violations, not block
+# CSP_REPORT_URI = '/csp-report/' # Optional: URL to send violation reports to
