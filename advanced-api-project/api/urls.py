@@ -10,8 +10,8 @@ urlpatterns = [
     path('books/', BookList.as_view(), name='book-list'),
     path('books/create/', BookCreate.as_view(), name='book-create'),
     path('books/<int:pk>/', BookDetail.as_view(), name='book-detail'),
-    path('books/<int:pk>/update/', BookUpdate.as_view(), name='book-update'),
-    path('books/<int:pk>/delete/', BookDestroy.as_view(), name='book-delete'),
+    path('books/update/', BookUpdate.as_view(), name='book-update'),
+    path('books/delete/', BookDestroy.as_view(), name='book-delete'),
 
     # Author URLs
     path('authors/', AuthorList.as_view(), name='author-list'),
