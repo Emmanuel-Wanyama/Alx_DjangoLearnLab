@@ -1,16 +1,22 @@
-# Import the path function from Django's URL configuration.
 from django.urls import path
 
-# Import the views you created in api/views.py.
-from .views import BookListCreate, BookDetail
+from .views import (
+    AuthorList, AuthorCreate, AuthorDetail, AuthorUpdate, AuthorDestroy,
+    BookList, BookCreate, BookDetail, BookUpdate, BookDestroy
+)
 
-# Define the URL patterns for your API app.
 urlpatterns = [
-    # This path handles GET (list all books) and POST (create a new book) requests.
-    # The name is optional but good practice for referencing the URL.
-    path('books/', BookListCreate.as_view(), name='book-list-create'),
-
-    # This path handles GET (retrieve a single book), PUT/PATCH (update),
-    # and DELETE (delete) requests. The <int:pk> captures the book's primary key.
+    # Book URLs
+    path('books/', BookList.as_view(), name='book-list'),
+    path('books/create/', BookCreate.as_view(), name='book-create'),
     path('books/<int:pk>/', BookDetail.as_view(), name='book-detail'),
+    path('books/<int:pk>/update/', BookUpdate.as_view(), name='book-update'),
+    path('books/<int:pk>/delete/', BookDestroy.as_view(), name='book-delete'),
+
+    # Author URLs
+    path('authors/', AuthorList.as_view(), name='author-list'),
+    path('authors/create/', AuthorCreate.as_view(), name='author-create'),
+    path('authors/<int:pk>/', AuthorDetail.as_view(), name='author-detail'),
+    path('authors/<int:pk>/update/', AuthorUpdate.as_view(), name='author-update'),
+    path('authors/<int:pk>/delete/', AuthorDestroy.as_view(), name='author-delete'),
 ]
