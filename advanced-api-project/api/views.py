@@ -1,5 +1,5 @@
 # Import the specific generic views and permission classes from Django REST Framework.
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter # Import the filtering backend
@@ -17,7 +17,7 @@ class BookList(generics.ListView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     # We've added SearchFilter to the filter_backends list.
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     
     # We specify the fields that can be used for filtering.
     # The API will now accept queries like ?title=Dune or ?author=1.
