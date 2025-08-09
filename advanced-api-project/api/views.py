@@ -1,56 +1,88 @@
-# Import the generic views and permission classes from Django REST Framework.
+# Import the specific generic views and permission classes from Django REST Framework.
 from rest_framework import generics, permissions
 
 # Import the models and serializers you've already defined.
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 
-# This view handles listing all books and creating a new book.
-# We've added a permission_classes attribute to enforce authentication.
-class BookListCreate(generics.ListCreateAPIView):
-    # This permission class allows any user to read (GET requests),
-    # but only authenticated users to create (POST requests).
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+# -- Book Views --
+
+# BookList view handles listing all books (GET requests).
+# It allows both authenticated and unauthenticated users to read the data.
+class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # This method is an example of customizing the create behavior.
-    # It allows you to run additional logic before a new object is saved.
-    # For instance, you could set the book's author to the current user.
+
+# BookCreate view handles creating a new book (POST requests).
+# It only allows authenticated users to create new books.
+class BookCreate(generics.CreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    # The perform_create hook is kept here to demonstrate customization.
     def perform_create(self, serializer):
-        # In a real-world scenario, you would need to associate the author
-        # with the logged-in user. For this example, we'll assume the
-        # user exists and is a valid author. You'd need to handle this logic
-        # and validation in your actual application.
-        # Example: serializer.save(author=self.request.user.author)
         serializer.save()
 
 
-# This view handles retrieving, updating, and deleting a single Book instance.
-class BookDetail(generics.RetrieveUpdateDestroyAPIView):
-    # We use the same permission class here to allow only authenticated users
-    # to update or delete a book.
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+# BookDetail view handles retrieving a single book (GET requests).
+# It allows both authenticated and unauthenticated users to read the data.
+class BookDetail(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-
-
-# This view lists all authors and allows for the creation of a new author.
-class AuthorListCreate(generics.ListCreateAPIView):
-    # We apply the same permission class to the Author views.
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+
+
+# BookUpdate view handles updating a single book (PUT/PATCH requests).
+# It only allows authenticated users to update books.
+class BookUpdate(generics.UpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+# BookDestroy view handles deleting a single book (DELETE requests).
+# It only allows authenticated users to delete books.
+class BookDestroy(generics.DestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+# -- Author Views --
+
+# AuthorList view handles listing all authors (GET requests).
+class AuthorList(generics.ListAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-
-
-# This view handles retrieving, updating, and deleting a single Author instance.
-# It also uses the AuthorSerializer, which includes the nested books.
-class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
-    # We apply the same permission class to the Author views.
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+
+
+# AuthorCreate view handles creating a new author (POST requests).
+class AuthorCreate(generics.CreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+# AuthorDetail view handles retrieving a single author (GET requests).
+class AuthorDetail(generics.RetrieveAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+# AuthorUpdate view handles updating a single author (PUT/PATCH requests).
+class AuthorUpdate(generics.UpdateAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+# AuthorDestroy view handles deleting a single author (DELETE requests).
+class AuthorDestroy(generics.DestroyAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.IsAuthenticated]
