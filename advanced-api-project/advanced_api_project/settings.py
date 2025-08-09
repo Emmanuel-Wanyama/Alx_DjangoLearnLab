@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',  # Added Django REST Framework
-    'api',             # Added our custom API app
+    'api', 
+    'django_filters',            # Added our custom API app
 ]
 
 MIDDLEWARE = [
