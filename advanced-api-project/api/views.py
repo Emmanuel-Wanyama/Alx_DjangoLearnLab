@@ -1,5 +1,6 @@
 # Import the specific generic views and permission classes from Django REST Framework.
 from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 # Import the models and serializers you've already defined.
 from .models import Book, Author
