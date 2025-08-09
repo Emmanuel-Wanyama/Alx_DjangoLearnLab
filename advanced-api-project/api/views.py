@@ -54,35 +54,35 @@ class BookDestroy(generics.DestroyAPIView):
 # -- Author Views --
 
 # AuthorList view handles listing all authors (GET requests).
-class AuthorList(generics.ListAPIView):
+class AuthorList(generics.ListView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 # AuthorCreate view handles creating a new author (POST requests).
-class AuthorCreate(generics.CreateAPIView):
+class AuthorCreate(generics.CreateView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 # AuthorDetail view handles retrieving a single author (GET requests).
-class AuthorDetail(generics.RetrieveAPIView):
+class AuthorDetail(generics.DetailView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 # AuthorUpdate view handles updating a single author (PUT/PATCH requests).
-class AuthorUpdate(generics.UpdateAPIView):
+class AuthorUpdate(generics.UpdateView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 # AuthorDestroy view handles deleting a single author (DELETE requests).
-class AuthorDestroy(generics.DestroyAPIView):
+class AuthorDestroy(generics.DeleteView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [permissions.IsAuthenticated]
