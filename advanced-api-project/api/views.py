@@ -3,6 +3,7 @@ from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter # Import the filtering backend
+from django_filters import rest_framework
 
 # Import the models and serializers you've already defined.
 from .models import Book, Author
