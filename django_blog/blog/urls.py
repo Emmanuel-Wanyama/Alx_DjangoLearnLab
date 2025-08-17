@@ -96,6 +96,9 @@ urlpatterns = [
 
     # URL for searching posts
     path('search/', PostSearchView.as_view(), name='post-search'),
+    
+    tags/<slug:tag_slug>/
+    PostByTagListView.as_view()
 ]
 '''
 
