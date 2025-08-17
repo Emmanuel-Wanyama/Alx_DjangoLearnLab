@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Profile, Post
+from .models import Profile, Post, Comment
 
 class UserRegisterForm(UserCreationForm):
     """
@@ -42,4 +42,18 @@ class PostForm(forms.ModelForm):
         }
         widgets = {
             'content': forms.Textarea(attrs={'rows': 10}),
+        }
+
+class CommentForm(forms.ModelForm):
+    """
+    A form for creating and updating comments based on the Comment model.
+    """
+    class Meta:
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': 'Your Comment',
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4}),
         }

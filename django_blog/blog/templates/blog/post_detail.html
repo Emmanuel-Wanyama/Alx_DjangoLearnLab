@@ -1,18 +1,71 @@
-{% extends "blog/base.html" %}
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <article class="media content-section">
-        <div class="media-body">
-            <h2 class="article-title">{{ object.title }}</h2>
-            <p class="article-content">{{ object.content }}</p>
-            <div class="article-metadata">
-                <small class="text-muted">By {{ object.author.username }} on {{ object.published_date|date:"F d, Y" }}</small>
-                {% if object.author == user %}
-                    <div>
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.pk %}">Update</a>
-                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.pk %}">Delete</a>
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <article class="media content-section">
+                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a class="mr-2" href="#">{{ post.author }}</a>
+                        <small class="text-muted">{{ post.published_date|date:"F d, Y" }}</small>
                     </div>
-                {% endif %}
+                    <h2 class="article-title">{{ post.title }}</h2>
+                    <p class="article-content">{{ post.content }}</p>
+                    {% if post.author == user %}
+                        <div>
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}">Update</a>
+                            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <div class="mt-4">
+                <h3>Comments ({{ comments.count }})</h3>
+                {% for comment in comments %}
+                    <div class="media content-section mt-3">
+                        <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2" href="#">{{ comment.author }}</a>
+                                <small class="text-muted">{{ comment.created_at|date:"F d, Y" }}</small>
+                                {% if comment.author == user %}
+                                    <small class="text-muted">
+                                        <a href="{% url 'comment-update' comment.id %}">Edit</a> |
+                                        <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+                                    </small>
+                                {% endif %}
+                            </div>
+                            <p class="article-content">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No comments yet. Be the first to comment!</p>
+                {% endfor %}
             </div>
+
+            <!-- Comment Form -->
+            {% if user.is_authenticated %}
+                <div class="content-section mt-4">
+                    <h3>Leave a comment</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            {{ comment_form|crispy }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-outline-info" type="submit">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <div class="content-section mt-4">
+                    <p>You must be logged in to leave a comment. <a href="{% url 'login' %}">Log In</a></p>
+                </div>
+            {% endif %}
+
         </div>
-    </article>
-{% endblock %}
+    </div>
+{% endblock content %}
