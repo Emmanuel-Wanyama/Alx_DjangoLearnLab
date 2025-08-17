@@ -7,6 +7,12 @@ from .views import (
     PostDeleteView
 )
 
+login/
+
+register/ 
+
+profile/
+
 urlpatterns = [
     path('', PostListView.as_view(), name='home'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
