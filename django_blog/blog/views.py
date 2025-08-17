@@ -7,6 +7,13 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+
+POST 
+
+method 
+
+save()
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 from .forms import PostForm  # Import the new form
