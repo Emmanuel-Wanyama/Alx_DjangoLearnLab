@@ -12,6 +12,11 @@
                     </div>
                     <h2 class="article-title">{{ post.title }}</h2>
                     <p class="article-content">{{ post.content }}</p>
+                    <div class="tags-section mt-2">
+                        {% for tag in post.tags.all %}
+                            <a href="{% url 'post-search' %}?q={{ tag.name }}" class="badge badge-info">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
                     {% if post.author == user %}
                         <div>
                             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}">Update</a>
@@ -65,7 +70,6 @@
                     <p>You must be logged in to leave a comment. <a href="{% url 'login' %}">Log In</a></p>
                 </div>
             {% endif %}
-
         </div>
     </div>
 {% endblock content %}
