@@ -57,7 +57,7 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4}),
         }
-'''
+
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -106,6 +106,71 @@ class PostForm(forms.ModelForm):
         }
         widgets = {
             'content': forms.Textarea(attrs={'rows': 10}),
+        }
+
+class CommentForm(forms.ModelForm):
+    """
+    A form for creating and updating comments based on the Comment model.
+    """
+    class Meta:
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': 'Your Comment',
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4}),
+        }
+'''
+
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Profile, Post, Comment
+from taggit.forms import TagField, TagWidget # Import TagField and TagWidget
+
+class UserRegisterForm(UserCreationForm):
+    """
+    A form for user registration with an email field.TagWidget()
+    """
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+class UserUpdateForm(forms.ModelForm):
+    """
+    A form for authenticated users to update their username and email.
+    """
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    """
+    A form for authenticated users to update their profile picture.
+    """
+    class Meta:
+        model = Profile
+        fields = ['image']
+
+class PostForm(forms.ModelForm):
+    """
+    A form for creating and updating blog posts based on the Post model.
+    """
+    tags = TagField(label="Tags (comma-separated)", required=False)
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']
+        labels = {
+            'title': 'Post Title',
+            'content': 'Post Content',
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 10}),
+            'tags': TagWidget(attrs={'placeholder': 'e.g., python, django, tutorial', 'class': 'form-control'}),
         }
 
 class CommentForm(forms.ModelForm):
