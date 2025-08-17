@@ -1,5 +1,20 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1>Home Page</h1>
-    <p>This is the home page of your Django blog.</p>
-{% endblock content %}
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a>
+                    </h5>
+                    <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                    <footer class="blockquote-footer">
+                        <small class="text-muted">By {{ post.author.username }} on {{ post.published_date|date:"F d, Y" }}</small>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
