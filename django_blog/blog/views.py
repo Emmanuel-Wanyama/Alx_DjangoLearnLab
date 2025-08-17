@@ -10,6 +10,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 from .forms import PostForm  # Import the new form
+from django.contrib.auth.decorators import login_required
 
 
 class PostListView(ListView):
