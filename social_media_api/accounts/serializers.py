@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import User
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
@@ -7,10 +9,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     password_confirm = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    token = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password_confirm', 'email', 'bio')
+        fields = ('username', 'password', 'password_confirm', 'email', 'bio', 'token')
         extra_kwargs = {
             'email': {'required': True},
         }
@@ -25,15 +28,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        Creates and returns a new user instance, given the validated data.
+        Creates and returns a new user instance and a token, given the validated data.
         """
         validated_data.pop('password_confirm')
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             bio=validated_data.get('bio', ''),
             password=validated_data['password']
         )
+        Token.objects.create(user=user)
         return user
 
 class UserLoginSerializer(serializers.Serializer):
@@ -42,6 +46,7 @@ class UserLoginSerializer(serializers.Serializer):
     """
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    token = serializers.CharField(read_only=True)
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """
