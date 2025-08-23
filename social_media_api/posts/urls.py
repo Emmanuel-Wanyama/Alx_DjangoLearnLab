@@ -10,3 +10,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('feed/', FeedView.as_view(), name='feed'),
 ]
+
+'''["<int:pk>/like/", "<int:pk>/unlike/"]'''
