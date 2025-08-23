@@ -1,14 +1,16 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from django.contrib.auth import authenticate
+from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
-from rest_framework import generics # Import generics
+from django.contrib.auth import authenticate
+from rest_framework import generics
 
-from .models import User # Import your custom user model
+from .models import User
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
+from notifications.models import Notification # Import the Notification model
 
 class UserRegistrationView(APIView):
     """
@@ -71,6 +73,28 @@ class FollowUserView(APIView):
             return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
         current_user.following.add(user_to_follow)
+        return Response({"status": "You are now following this user."}, status=status.HTTP_200_OK)
+    
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk, *args, **kwargs):
+        user_to_follow = get_object_or_404(User, pk=pk)
+        current_user = request.user
+        
+        if user_to_follow == current_user:
+            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        current_user.following.add(user_to_follow)
+
+        # Create a notification for the followed user
+        Notification.objects.create(
+            recipient=user_to_follow,
+            actor=current_user,
+            verb='followed',
+            target=user_to_follow # The target is the user being followed
+        )
+
         return Response({"status": "You are now following this user."}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(APIView):
