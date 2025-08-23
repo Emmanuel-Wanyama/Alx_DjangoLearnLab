@@ -93,3 +93,74 @@ bio: A text field for a short biography.
 profile_picture: An image field for the user's profile picture.
 
 followers: A many-to-many relationship to itself, allowing users to follow each other. The related name for following is following.
+
+API Documentation
+This section documents the new API endpoints for managing user follows and accessing a personalized content feed.
+
+Follow Management
+These endpoints handle the one-way relationship between users. The current user must be authenticated to use these.
+
+Endpoint: Follow a User
+
+URL: api/accounts/follow/<int:pk>/
+
+Method: POST
+
+Permissions: IsAuthenticated
+
+Description: Allows the authenticated user to follow another user. The pk is the ID of the user you want to follow.
+
+Example Request:
+
+Bash
+
+curl -X POST \
+  -H "Authorization: Token your_auth_token" \
+  http://localhost:8000/api/accounts/follow/2/
+Endpoint: Unfollow a User
+
+URL: api/accounts/unfollow/<int:pk>/
+
+Method: POST
+
+Permissions: IsAuthenticated
+
+Description: Allows the authenticated user to unfollow another user. The pk is the ID of the user you want to unfollow.
+
+Example Request:
+
+Bash
+
+curl -X POST \
+  -H "Authorization: Token your_auth_token" \
+  http://localhost:8000/api/accounts/unfollow/2/
+Feed Generation
+This endpoint provides a personalized feed of posts from the users you follow.
+
+Endpoint: Get User Feed
+
+URL: api/posts/feed/
+
+Method: GET
+
+Permissions: IsAuthenticated
+
+Description: Retrieves a paginated list of posts from all users the authenticated user follows. Posts are ordered by creation date, with the most recent appearing first.
+
+Example Request:
+
+Bash
+
+curl -X GET \
+  -H "Authorization: Token your_auth_token" \
+  http://localhost:8000/api/posts/feed/
+Model Changes
+The User model has been modified to handle follower relationships.
+
+following Field:
+
+Type: ManyToManyField to self
+
+Purpose: Represents the users that a given user is following.
+
+Details: It has a related_name of followers and is set to symmetrical=False to ensure that following is a one-way relationship.

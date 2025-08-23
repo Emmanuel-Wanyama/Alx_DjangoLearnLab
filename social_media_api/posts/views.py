@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment
@@ -41,3 +41,19 @@ class CommentViewSet(viewsets.ModelViewSet):
         Sets the author of the comment to the current logged-in user.
         """
         serializer.save(author=self.request.user)
+
+class FeedView(generics.ListAPIView):
+    """
+    API view to display a feed of posts from users the current user follows.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        # Get the IDs of users the current user is following
+        followed_users = user.following.all()
+        # Filter posts to include only those from followed users
+        # and order them by creation date, newest first
+        return Post.objects.filter(author__in=followed_users).order_by('-created_at')

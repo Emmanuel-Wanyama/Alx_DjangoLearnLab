@@ -7,12 +7,12 @@ class User(AbstractUser):
     """
     bio = models.TextField(blank=True, default='')
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
-    
-    # Many-to-many relationship with itself for followers
+
+    # Many-to-many relationship with itself for following
     # symmetrical=False means following is not reciprocal by default
-    followers = models.ManyToManyField(
+    following = models.ManyToManyField(
         'self',
-        related_name='following',
+        related_name='followers',
         symmetrical=False,
         blank=True
     )
