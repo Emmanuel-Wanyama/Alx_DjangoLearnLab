@@ -5,8 +5,9 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
+from rest_framework import generics # Import generics
 
-from .models import User
+from .models import User # Import your custom user model
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
 
 class UserRegistrationView(APIView):
