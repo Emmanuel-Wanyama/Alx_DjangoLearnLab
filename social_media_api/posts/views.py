@@ -105,3 +105,5 @@ class UnlikeView(APIView):
             return Response({"message": "Post unliked successfully."}, status=status.HTTP_200_OK)
         
         return Response({"message": "You have not liked this post."}, status=status.HTTP_404_NOT_FOUND)
+
+'''"generics.get_object_or_404(Post, pk=pk)", "Like.objects.get_or_create(user=request.user, post=post)"'''
