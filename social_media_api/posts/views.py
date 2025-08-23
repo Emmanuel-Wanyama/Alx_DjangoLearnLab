@@ -57,3 +57,5 @@ class FeedView(generics.ListAPIView):
         # Filter posts to include only those from followed users
         # and order them by creation date, newest first
         return Post.objects.filter(author__in=followed_users).order_by('-created_at')
+    
+    '''Post.objects.filter(author__in=following_users).order_by", "permissions.IsAuthenticated'''
