@@ -51,6 +51,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for the user's profile.
+    serializers.CharField()
     """
     class Meta:
         model = User
